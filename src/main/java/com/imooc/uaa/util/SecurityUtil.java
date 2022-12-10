@@ -9,6 +9,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 public class SecurityUtil {
+
     private static final String ANONYMOUS_USER = "anonymous";
 
     public static String getCurrentLogin() {

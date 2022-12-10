@@ -3,6 +3,7 @@ package com.imooc.uaa.rest;
 import com.imooc.uaa.util.SecurityUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,5 +25,9 @@ public class UserResource {
     @GetMapping("/authentication")
     public Authentication getCurrentAuthentication(Authentication authentication) {
         return authentication;
+    }
+@GetMapping("/users{username}")
+    public void getMap(@PathVariable("username") String username){
+
     }
 }

@@ -21,3 +21,15 @@ spring:
     active: "dev"
   resources:
     add-mappings: false
+  redis:
+    host: 127.0.0.1
+    database: 15
+wshen:
+  jwt:
+    access-token-expire-time: 300000
+    refresh-token-expire-time: 2592000000
+  redisson:
+    config:
+      singleServerConfig:
+        address: redis://127.0.0.1:6379
+

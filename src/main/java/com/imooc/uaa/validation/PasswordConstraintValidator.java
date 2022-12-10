@@ -10,9 +10,12 @@ import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
+
     private final MessageResolver messageResolver;
+
     @Override
-    public void initialize(final ValidPassword constraintAnnotation) {}
+    public void initialize(final ValidPassword constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(final String password, final ConstraintValidatorContext context) {
@@ -28,8 +31,8 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
             // 至少有一个特殊字符
             new CharacterRule(EnglishCharacterData.Special, 1),
             // 不允许连续 3 个字母，按字母表顺序
-            // 比如字母形式 'abcde', 数字形式 '34567', qwery 键盘形式 'asdfg'
-            // wrap 为 false 表示不超过限制长度的连续是允许的，比如 'xyzabc'
+            // alphabetical is of the form 'abcde', numerical is '34567', qwery is 'asdfg'
+            // the false parameter indicates that wrapped sequences are allowed; e.g. 'xyzabc'
             new IllegalSequenceRule(EnglishSequenceData.Alphabetical, 5, false),
             // 不允许 3 个连续数字
             new IllegalSequenceRule(EnglishSequenceData.Numerical, 5, false),

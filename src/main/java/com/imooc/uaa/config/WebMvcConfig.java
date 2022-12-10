@@ -7,10 +7,9 @@ import org.passay.MessageResolver;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.zalando.problem.ProblemModule;
 import org.zalando.problem.violations.ConstraintViolationProblemModule;
@@ -20,6 +19,7 @@ import org.zalando.problem.violations.ConstraintViolationProblemModule;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MessageSource messageSource;
+    private final Environment environment;
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -30,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 配置自定义的 Passay 消息解析器
+     *
      * @return MessageResolver
      */
     @Bean
@@ -39,6 +40,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 配置 Java Validation 使用国际化的消息资源
+     *
      * @return LocalValidatorFactoryBean
      */
     @Bean
@@ -50,16 +52,28 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/webjars/**")
-            .addResourceLocations("/webjars/")
-            .resourceChain(false);
-        registry.setOrder(1);
+        registry
+            .addResourceHandler("/resources/**")
+            .addResourceLocations("/resources/");
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/").setViewName("index");
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
+//    /**
+//     * 使用 Sprig Mvc 配置 CORS
+//     * @param registry Cors 注册表
+//     */
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        if (environment.acceptsProfiles(Profiles.of("dev"))) {
+//            registry.addMapping("/**")
+//                .allowedHeaders("*")
+//                .exposedHeaders("X-Authenticate")
+//                .allowedOrigins("http://localhost:4001");
+//        } else {
+//            registry.addMapping("/**")
+//                .allowedHeaders("*")
+//                .exposedHeaders("X-Authenticate")
+//                .allowedMethods("POST", "GET", "PUT", "DELETE", "OPTIONS")
+//                .allowedOrigins("https://uaa.imooc.com"); // 生产主机域名
+//        }
+//    }
 }

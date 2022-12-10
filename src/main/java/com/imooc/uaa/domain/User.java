@@ -1,6 +1,7 @@
 package com.imooc.uaa.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.imooc.uaa.util.Constants;
 import com.imooc.uaa.validation.ValidEmail;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -21,8 +22,9 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
+@ToString
+@Setter
 @Entity
 @Table(name = "mooc_users")
 public class User implements UserDetails, Serializable {
@@ -32,7 +34,6 @@ public class User implements UserDetails, Serializable {
      * 自增长 ID，唯一标识
      */
     @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,7 +42,6 @@ public class User implements UserDetails, Serializable {
      * 用户名
      */
     @Getter
-    @Setter
     @NotNull
     @Size(max = 50)
     @Column(length = 50, unique = true, nullable = false)
@@ -51,9 +51,8 @@ public class User implements UserDetails, Serializable {
      * 手机号
      */
     @Getter
-    @Setter
     @NotNull
-    @Pattern(regexp = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$")
+    @Pattern(regexp = Constants.PATTERN_MOBILE)
     @Size(min = 11, max = 11)
     @Column(length = 11, unique = true, nullable = false)
     private String mobile;
@@ -62,7 +61,6 @@ public class User implements UserDetails, Serializable {
      * 姓名
      */
     @Getter
-    @Setter
     @NotNull
     @Size(max = 50)
     @Column(length = 50)
@@ -72,7 +70,6 @@ public class User implements UserDetails, Serializable {
      * 是否激活，默认激活
      */
     @Builder.Default
-    @Setter
     @NotNull
     @Column(nullable = false)
     private Boolean enabled = true;
@@ -81,7 +78,6 @@ public class User implements UserDetails, Serializable {
      * 账户是否未过期，默认未过期
      */
     @Builder.Default
-    @Setter
     @NotNull
     @Column(name = "account_non_expired", nullable = false)
     private Boolean accountNonExpired = true;
@@ -90,7 +86,6 @@ public class User implements UserDetails, Serializable {
      * 账户是否未锁定，默认未锁定
      */
     @Builder.Default
-    @Setter
     @NotNull
     @Column(name = "account_non_locked", nullable = false)
     private Boolean accountNonLocked = true;
@@ -99,7 +94,6 @@ public class User implements UserDetails, Serializable {
      * 密码是否未过期，默认未过期
      */
     @Builder.Default
-    @Setter
     @NotNull
     @Column(name = "credentials_non_expired", nullable = false)
     private Boolean credentialsNonExpired = true;
@@ -108,7 +102,6 @@ public class User implements UserDetails, Serializable {
      * 密码哈希
      */
     @Getter
-    @Setter
     @JsonIgnore
     @NotNull
     @Size(min = 40, max = 80)
@@ -119,17 +112,33 @@ public class User implements UserDetails, Serializable {
      * 电邮地址
      */
     @Getter
-    @Setter
     @ValidEmail
     @Size(min = 5, max = 254)
     @Column(length = 254, unique = true, nullable = false)
     private String email;
 
     /**
+     * 是否启用两步验证
+     */
+    @Builder.Default
+    @NotNull
+    @Column(name = "using_mfa", nullable = false)
+    private boolean usingMfa = false;
+
+    /**
+     * 两步验证的key
+     */
+    @JsonIgnore
+    @Getter
+    @Setter
+    @NotNull
+    @Column(name = "mfa_key", nullable = false)
+    private String mfaKey;
+
+    /**
      * 角色列表，使用 Set 确保不重复
      */
     @Getter
-    @Setter
     @JsonIgnore
     @ManyToMany
     @Fetch(FetchMode.JOIN)
@@ -157,5 +166,9 @@ public class User implements UserDetails, Serializable {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public boolean isUsingMfa() {
+        return usingMfa;
     }
 }
