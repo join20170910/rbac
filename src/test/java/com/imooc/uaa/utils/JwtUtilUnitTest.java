@@ -32,12 +32,12 @@ public class JwtUtilUnitTest extends UaaApplicationTests {
     @DisplayName("token 构建 测试")
     public void demo01(){
         String username = "john";
-        Set<Role> authorityList = Set.of(Role.builder().authority("ROLE_ADMIN")
+        Set<Role> authorityList = Set.of(Role.builder().roleName("ROLE_ADMIN")
                 .build(),
-            Role.builder().authority("ROLE_USER").build());
+            Role.builder().roleName("ROLE_USER").build());
         User user = User.builder().build();
         user.setUsername(username);
-        user.setAuthorities(authorityList);
+        user.setRoles(authorityList);
         String jwtToken = jwtUtil.createJwtToken(user,60_000,JwtUtil.key);
         Assertions.assertFalse(StringUtils.isEmpty(jwtToken));
 

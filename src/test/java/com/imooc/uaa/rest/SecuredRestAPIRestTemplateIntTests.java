@@ -53,4 +53,11 @@ public class SecuredRestAPIRestTemplateIntTests {
         ).andDo(print())
             .andExpect(status().isOk());
     }
+    @WithMockUser
+    @Test
+    public void givenUserRole_whenQueryUserByEmail_shouldSuccess() throws Exception {
+        mvc.perform(get("/users/my-email/{email}","user@local.dev"))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
 }

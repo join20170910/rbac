@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS mooc_roles (
                                           id BIGINT NOT NULL AUTO_INCREMENT,
                                           role_name VARCHAR(50) NOT NULL,
+                                           display_name VARCHAR(50) NOT NULL,
+                                            built_in VARCHAR(10) NOT NULL,
                                           PRIMARY KEY (id),
                                           CONSTRAINT uk_mooc_roles_role_name UNIQUE (role_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -33,5 +35,8 @@ CREATE TABLE IF NOT EXISTS mooc_users_roles (
 insert into mooc_users(id, username, `name`, mobile, password_hash, enabled, account_non_expired, account_non_locked, credentials_non_expired, email)
 values (1, 'user', 'Zhang San', '13000000001', '{bcrypt}$2a$10$jhS817qUHgOR4uQSoEBRxO58.rZ1dBCmCTjG8PeuQAX4eISf.zowm', 1, 1, 1, 1, 'zhangsan@local.dev'),
        (2, 'old_user', 'Li Si', '13000000002', '{SHA-1}7ce0359f12857f2a90c7de465f40a95f01cb5da9', 1, 1, 1, 1, 'lisi@local.dev');
-insert into mooc_roles(id, role_name) values (1, 'ROLE_USER'), (2, 'ROLE_ADMIN');
+insert into mooc_roles(id, role_name, display_name, built_in)
+values (1, 'ROLE_USER', '客户端用户', true),
+       (2, 'ROLE_ADMIN', '超级管理员', true),
+       (3, 'ROLE_STAFF', '管理后台用户', true);
 insert into mooc_users_roles(user_id, role_id) values (1, 1), (1, 2), (2, 1);

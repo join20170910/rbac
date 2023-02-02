@@ -44,8 +44,8 @@ public class UserService {
     public User register(User user) {
         return roleRepo.findOptionalByAuthority(ROLE_USER)
             .map(role -> {
-                val userToSave = user
-                    .withAuthorities(Set.of(role))
+                User userToSave = user
+                    .withRoles(Set.of(role))
                     .withPassword(passwordEncoder.encode(user.getPassword()))
                     .withMfaKey(totpUtil.encodeKeyToString());
                 return userRepo.save(userToSave);
@@ -55,6 +55,9 @@ public class UserService {
 
     public Optional<User> findOptionalByUsername(String username) {
         return userRepo.findOptionalByUsername(username);
+    }
+    public Optional<User> findOptionalByEmail(String email){
+        return userRepo.findOptionalByEmail(email);
     }
 
     public Optional<User> findOptionalByUsernameAndPassword(String username, String password) {
